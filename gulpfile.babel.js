@@ -1,6 +1,3 @@
-/**
- * Created by WittBulter on 2017/2/6.
- */
 import babelify from 'babelify'
 import gulp from 'gulp'
 import header from 'gulp-header'
@@ -36,20 +33,7 @@ gulp.task('script', () => {
 		.pipe(gulp.dest('.'))
 })
 
-gulp.task('sass', function () {
-	return rubySass('./src/sass/index.scss',{sourcemap: true})
-		.on('error', rubySass.logError)
-		.pipe(maps.write('./css',{
-			includeContent: false,
-			sourceRoot: 'source'
-		}))
-		.pipe(gulp.dest('./dist'))
-})
 
-gulp.task('watch-sass', () => {
-	gulp.run('sass')
-	gulp.watch(['./src/sass/*.scss'], () => gulp.run('sass'))
-})
 gulp.task('watch-script', () => {
 	gulp.run('script')
 	gulp.watch(['./src/**/*.js', './src/*.js'], () => gulp.run('script'))
