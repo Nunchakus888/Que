@@ -3,29 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <link rel="stylesheet" href="./material.min.css">
   <script src="../dist/que.js"></script>
 </head>
 <body>
 <div id="app">
-  <input type="text" q-model="test">
-  <h2>{{test}}</h2>
-  <button on-click="alertHello"></button>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+
+        <div class="card text-center">
+          <div class="card-header">
+            观察变化
+          </div>
+          <div class="card-block">
+            <h1 class="card-title">{{message}}</h1>
+            <input type="text" q-model="message" class="form-control m-md align-content-md-center" placeholder="输入字符">
+            <button on-click="alertHello" class="btn btn-primary">触发alertHello</button>
+          </div>
+          <div class="card-footer text-muted">
+            test
+          </div>
+        </div>
+
+      </div>
+      <div class="col-sm-6">
+
+        <div class="card text-center">
+          <div class="card-header">
+            自动增加的值
+          </div>
+          <div class="card-block">
+            <h1 class="card-title">{{count}}</h1>
+            <button on-click="handle" class="btn btn-primary">{{toggleView}}</button>
+          </div>
+          <div class="card-footer text-muted">
+            test
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
 </div>
 <script>
   const app = new Que({
     el: '#app',
-    computed: {
-      test: ''
-    },
     data: {
       message: 'Hi Que!',
-      test: '1'
+      count: 1,
+      toggle: true,
+      toggleView: '暂停'
     },
     created (){
+      setInterval(() =>{
+        if (this.data.toggle){
+          this.data.count = this.data.count + 1
+        }
+      }, 400)
     },
     method: {
       alertHello: function (){
-        console.log(123);
+        alert('hello')
+      },
+      handle: function (){
+        this.data.toggle = !this.data.toggle
+        this.data.toggleView = this.data.toggle? '暂停': '恢复'
       }
     }
   })

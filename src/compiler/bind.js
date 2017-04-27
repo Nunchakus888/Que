@@ -4,10 +4,11 @@
 import {help} from '../utils/help'
 
 export default class Bind {
-  constructor({watcher, scope, method}) {
+  constructor({watcher, scope, method, handle}) {
     this.$watcher = watcher
     this.$scope = scope
     this.$method = method
+    this.$handle = handle
   }
   
   model(node, key) {
@@ -69,7 +70,7 @@ export default class Bind {
       return help.err(`method中未定义模板中出现的\'${key}\'方法`);
     }
     node.addEventListener(bindingMode, event =>{
-      this.$method[key](event)
+      this.$method[key].call(this.$handle, event)
     })
   }
 }

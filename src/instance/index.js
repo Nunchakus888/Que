@@ -18,7 +18,8 @@ export default class Que {
     new Parse(this.options.el, {
       watcher: this.$watcher,
       scope: this.$scope,
-      method: this.options.method
+      method: this.options.method,
+      handle: this.options
     })
     
     // 生命周期
