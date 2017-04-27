@@ -4,6 +4,7 @@
 基于Proxy与Reflect实现。非生产力工具。
 
 ### 已实现：
+![预览](http://static.wittsay.cc/que-test1.gif)
 
  - 双向绑定
  - 模板字符串解析
