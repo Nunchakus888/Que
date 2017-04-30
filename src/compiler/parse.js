@@ -2,11 +2,10 @@
  * Created by WittBulter on 2017/4/24.
  */
 import {utils} from "../utils/index"
-import Bind from './bind'
 
 export default class Parse {
-  constructor (elementString, observer){
-    this.$bind = new Bind(observer)
+  constructor (elementString, bind){
+    this.$bind = bind
     this.init(elementString)
   }
   
@@ -29,8 +28,10 @@ export default class Parse {
   
   element(el) {
     ;[...el.childNodes].forEach(node => {
+      // 直接绑定文本
       if (utils.isTextNode(node) && utils.textReg.test(node.textContent)){
         const str = utils.textReg.exec(node.textContent)[1]
+        
         this.$bind.text(node, str)
       }
       if (utils.isElementNode(node)){

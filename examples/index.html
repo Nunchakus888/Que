@@ -17,7 +17,7 @@
             观察变化
           </div>
           <div class="card-block">
-            <h1 class="card-title">{{message}}</h1>
+            <h1 class="card-title">{{'hi,' +  message}}</h1>
             <input type="text" q-model="message" class="form-control m-md align-content-md-center" placeholder="输入字符">
             <button on-click="alertHello" class="btn btn-primary">触发alertHello</button>
           </div>
@@ -53,15 +53,19 @@
   const app = new Que({
     el: '#app',
     data: {
-      message: 'Hi Que!',
+      message: 'que!',
       count: 1,
       toggle: true,
-      toggleView: '暂停'
+      toggleView: '暂停',
+      test: 22,
     },
     created (){
-      setInterval(() =>{
-        if (this.data.toggle){
-          this.data.count = this.data.count + 1
+      setTimeout(() =>{
+        this.$scope.test = 3
+      }, 1000)
+            setInterval(() =>{
+        if (this.$scope.toggle){
+          this.$scope.count = this.$scope.count + 1
         }
       }, 400)
     },
@@ -70,8 +74,8 @@
         alert('hello')
       },
       handle: function (){
-        this.data.toggle = !this.data.toggle
-        this.data.toggleView = this.data.toggle? '暂停': '恢复'
+        this.$scope.toggle = !this.$scope.toggle
+        this.$scope.toggleView = this.$scope.toggle? '暂停': '恢复'
       }
     }
   })
