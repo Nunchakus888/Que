@@ -5,12 +5,13 @@ import {charCode} from '../constant/charCode'
 
 export const exp = (expString) => {
   const PLACEHOLDER = '__Q-U-E'
-  let str = expString.replace(/\s/g,'')
+  let str = expString.replace(/\s/g, '')
   let watchKey = []
   let notes = {
     includesObject: 0,
     includesArray: 0,
     includesString: 0,
+    includesConditional: 0,
     firstIsString: false,
   }
   let chr = '', resultString = str, resultExp
@@ -50,7 +51,10 @@ export const exp = (expString) => {
         chr = ''
         break
       default:
-        if (hasOperator(code)){
+        if (hasOperator(code) || hasConditional(code)){
+          if (hasConditional(code)){
+            notes.includesConditional ++
+          }
           if (addToWatchKey(watchKey, chr)){
             resultString = resultString.replace(chr, PLACEHOLDER)
           }
@@ -68,16 +72,19 @@ export const exp = (expString) => {
           chr = ''
         }
     }
-    
-    
   }
+  
   for (let i = 0; i < watchKey.length; i ++){
     resultString = resultString.replace(PLACEHOLDER, `\`\$\{${'scope.' + watchKey[i]}\}\``)
   }
-  // resultExp = eval(`(scope) => \`${resultString}\``)
+  
+  if (notes.includesConditional > 0){
+    resultString = includesConditional(resultString)
+  }
+  
   return {
     value: watchKey,
-    update: eval.call(null, '(scope) =>' + resultString),
+    update: eval.call(null, '(scope) => (' + resultString + ')'),
   }
 }
 
@@ -89,13 +96,37 @@ const addToWatchKey = (target, value) => {
   return false
 }
 
-
 const hasOperator = c => {
   if (! c){
     return false
   }
-  if (charCode['+'] === c || charCode['-'] === c || charCode['*'] === c || charCode['/'] === c){
+  if (charCode['+'] === c
+    || charCode['-'] === c
+    || charCode['*'] === c
+    || charCode['/'] === c
+    || charCode['?'] === c
+    || charCode[':'] === c
+    || charCode['('] === c
+    || charCode[')'] === c
+  ){
     return true
   }
   return false
+}
+
+const hasConditional = c => {
+  if (charCode['?'] === c || charCode[':'] === c){
+    return true
+  }
+  return false
+}
+
+const includesConditional = resultString => {
+  let arr = resultString.split('?')
+  for (let i = 0; i < arr.length; i ++){
+    if (i !== arr.length - 1){
+      arr[i] = `eval(${arr[i]})?`
+    }
+  }
+  return arr.join('')
 }
