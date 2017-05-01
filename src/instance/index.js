@@ -30,6 +30,7 @@ export default class Que {
     
     this.$scope = observer(this.$options.data, this.$handle, this)
     
+    this.$$events = []
     this.$watcher = {}
     for (let key in this.$scope){
       this.$watcher[key] = []
@@ -60,5 +61,34 @@ export default class Que {
     }
     this.$$lifecycle.destroyed()
   }
+  
+  $off(eventName, callback) {
+    let fnd = false, removedListeners = []
+    const hasCallback = callback && typeof callback === 'function'
+    if (! this.$$events.length === 0){
+      return
+    }
+    
+    if (! eventName){
+      this.$$events.forEach(v => v.node.removeEventListener(v.mode))
+      return true
+    }
+  
+    this.$$events.forEach((event, i) => {
+      if (eventName === event.mode  && (hasCallback? callback === event.handle: true)){
+        fnd = true
+        event.node.removeEventListener(eventName, event.handle)
+        removedListeners.push(i)
+      }
+    })
+    
+    if (fnd){
+      removedListeners.forEach(v => this.$$events.splice(v, 1))
+    }
+    return fnd
+  }
+  
+  
+  
   
 }

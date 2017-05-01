@@ -41,8 +41,12 @@ export function bind() {
       if (! this.$method[key]){
         return help.err(`method中未定义模板中出现的\'${key}\'方法`)
       }
-      node.addEventListener(bindingMode, event => {
-        this.$method[key].call(this, event)
+      const handle = this.$method[key].bind(this)
+      node.addEventListener(bindingMode, handle)
+      this.$$events.push({
+        mode: bindingMode,
+        node: node,
+        handle: handle,
       })
     },
   }

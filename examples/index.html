@@ -63,6 +63,7 @@
     method: {
       alertHello: function (){
         alert('hello')
+        this.$off('click')
       },
       handle: function (){
         this.$scope.toggle = !this.$scope.toggle
