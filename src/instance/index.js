@@ -4,12 +4,13 @@
 import {config} from "../constant/config"
 import {observer} from "./observer"
 import Parse from "../compiler/parse"
-import Bind from '../compiler/bind'
+import {bind} from '../compiler/bind'
 
 
 export default class Que {
   constructor(options) {
     this.$options = Object.assign(config, options);
+    this.$method = this.$options.method
     this.$data = {};
     for (let key in this.$options.data){
       this.$data[key] = this.$options.data[key];
@@ -35,13 +36,7 @@ export default class Que {
       this.$watcher[key] = []
     }
     
-    const bind = new Bind({
-      scope: this.$scope,
-      method: this.$options.method,
-      handle: this,
-      watcher: this.$watcher
-    })
-    new Parse(this.$options.el, bind)
+    new Parse(this.$options.el, bind.call(this))
     
     
     // 生命周期
