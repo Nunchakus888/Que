@@ -5,6 +5,8 @@ import {help} from '../utils/help'
 import {exp} from './exp'
 
 export function bind() {
+  this.$method = this.$options.method
+  
   return {
     model: (node, key) => {
       if (! this.$scope[key]){

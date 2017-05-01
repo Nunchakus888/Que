@@ -5,5 +5,20 @@ export const config = {
   el: 'app',
   data: {},
   method: {},
-  created: () => {}
+  beforeCreate: () => {
+  },
+  created: () => {
+  },
+  beforeMount: () => {
+  },
+  mounted: () => {
+  },
+  beforeUpdate: () => {
+  },
+  updated: () => {
+  },
+  beforeDestroy: () => {
+  },
+  destroyed: () => {
+  },
 }

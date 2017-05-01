@@ -1,15 +1,20 @@
 /**
  * Created by WittBulter on 2017/4/24.
  */
-import {utils} from "../utils/index"
+import {utils} from '../utils/index'
 
 export default class Parse {
-  constructor (elementString, bind){
+  constructor(elementString, bind, created) {
     this.$bind = bind
-    this.init(elementString)
+    this.created = created
+    this.create(elementString)
   }
   
-  init(elementString) {
+  static init(...args) {
+    return new Parse(...args)
+  }
+  
+  create(elementString) {
     const el = document.querySelector(elementString)
     const createFragment = el => {
       let fragment = document.createDocumentFragment()
@@ -23,11 +28,13 @@ export default class Parse {
     // 解析拷贝的$fragment
     this.element($fragment)
     el.appendChild($fragment)
-    
+    this.created(el)
   }
   
+  
   element(el) {
-    ;[...el.childNodes].forEach(node => {
+    ;
+    [...el.childNodes].forEach(node => {
       // 直接绑定文本
       if (utils.isTextNode(node) && utils.textReg.test(node.textContent)){
         const str = utils.textReg.exec(node.textContent)[1]
@@ -41,11 +48,12 @@ export default class Parse {
       if (node.childNodes && node.childNodes.length){
         this.element(node)
       }
-    });
+    })
   }
   
   attr(node) {
-    ;[...node.attributes].forEach(attr => {
+    ;
+    [...node.attributes].forEach(attr => {
       // 自定义指令
       if (utils.legalAttribute(attr.name)){
         const key = attr.value
@@ -70,7 +78,7 @@ export default class Parse {
   
   // 内置指令
   directive(node, key, bindingMode) {
-    if (this.$bind[bindingMode]&& typeof this.$bind[bindingMode] === 'function'){
+    if (this.$bind[bindingMode] && typeof this.$bind[bindingMode] === 'function'){
       this.$bind[bindingMode](node, key)
     }
   }
