@@ -4,40 +4,42 @@
 import {help} from '../utils/help'
 import {exp} from './exp'
 
-export function bind () {
+export function bind() {
   return {
-    model: (node, key)=> {
-      if (!this.$scope[key]){
-        return help.err(`模板中使用的\'${templateKey}\'变量未在'data'中定义`);
+    model: (node, key) => {
+      if (! this.$scope[key]){
+        return help.err(`模板中使用的\'${templateKey}\'变量未在'data'中定义`)
       }
-      node.addEventListener("input", e => {
-        const newValue = e.target.value;
-        if (this.$scope[key] === newValue) return;
-        this.$scope[key] = newValue;
+      node.addEventListener('input', e => {
+        const newValue = e.target.value
+        if (this.$scope[key] === newValue) return
+        this.$scope[key] = newValue
       })
     },
-  
-    text:(node, key) => {
+    
+    text: (node, key) => {
       const {value, update} = exp(key)
-      const updateNode = function (scope){node.textContent = update(scope)}
-
+      const updateNode = function (scope) {
+        node.textContent = update(scope)
+      }
+      
       for (let index = 0; index < value.length; index ++){
         const templateKey = value[index]
-        if (!this.$watcher[templateKey]){
-          return help.err(`模板中使用的\'${templateKey}\'变量未在'data'中定义`);
+        if (! this.$watcher[templateKey]){
+          return help.err(`模板中使用的\'${templateKey}\'变量未在'data'中定义`)
         }
         this.$watcher[templateKey].push({
-          updateNode: updateNode
+          updateNode: updateNode,
         })
         updateNode(this.$scope)
       }
     },
-  
-    event:(node, key, bindingMode) => {
-      if (!this.$method[key]){
-        return help.err(`method中未定义模板中出现的\'${key}\'方法`);
+    
+    event: (node, key, bindingMode) => {
+      if (! this.$method[key]){
+        return help.err(`method中未定义模板中出现的\'${key}\'方法`)
       }
-      node.addEventListener(bindingMode, event =>{
+      node.addEventListener(bindingMode, event => {
         this.$method[key].call(this, event)
       })
     },
