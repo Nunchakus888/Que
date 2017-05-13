@@ -1,55 +1,44 @@
 /**
  * Created by WittBulter on 2017/4/24.
  */
-import {config} from '../constant/config'
-import {bind} from '../compiler/bind'
-import {observer} from './observer'
+import { config } from '../constant/config'
+import initData from './init/data'
+import initHook from './hook'
 
-import Event from './event'
+import Bind from '../compiler/bind'
+import Observe from './observe'
 import Parse from '../compiler/parse'
 import Lifecycle from './lifecycle'
-
-export default class Que {
+class Que {
   constructor(options) {
     this.$options = Object.assign(config, options)
+    this.$observe = new Observe()
     
-    this.$$lifecycle = new Lifecycle(this.$options, this)
-    this.$$lifecycle.beforeCreate()
+    // 绑定数据 生成新的命名空间
+    this.$nameSpace = initData.install(this.$options.data, this.$observe)
+    this.$lifecycle = new Lifecycle(this.$options, this.$nameSpace)
+    this.$lifecycle.beforeCreate()
     
-    this.$scope = observer(this.$options.data(), this.$handle, this)
+    // 设置命名空间 每次更新data后都应当手动设置一次
+    this.$observe.setNameSpace(this.$nameSpace)
+    this.$events = []
+    this.$lifecycle.created()
     
-    this.$$events = []
-    this.$watcher = {}
-    for (let key in this.$scope){
-      this.$watcher[key] = []
-    
-    }
-    
-    this.$$lifecycle.created()
-    this.$$lifecycle.beforeMount()
-    Parse.init(this.$options.el, bind.call(this), el => {
-      this.$el = el
-      this.$$lifecycle.mounted()
+    const bindFn = new Bind({
+      methods: this.$options.method,
+      scope: this.$nameSpace,
+      observe: this.$observe,
+      events: this.$events,
     })
-    new Event(this)
+    this.$lifecycle.beforeMount()
+    Parse.init(this.$options.el, bindFn, (el) => {
+      this.$nameSpace.$el = el
+      this.$lifecycle.mounted()
+    })
+    
+    initHook.install(this)
   }
-  
-  $handle(key, _this) {
-    _this.$$lifecycle.beforeUpdate()
-    const modelValue = _this.$watcher[key]
-    for (let index = 0; index < modelValue.length; index ++){
-      modelValue[index].updateNode(_this.$scope)
-    }
-    _this.$$lifecycle.updated()
-  }
-  
-  $destroy() {
-    this.$$lifecycle.beforeDestroy()
-    this.$scope = Object.assign(this.$scope, {})
-    for (let key in this.$scope){
-      this.$watcher[key] = []
-    }
-    this.$$lifecycle.destroyed()
-  }
-  
 }
+
+
+export default Que

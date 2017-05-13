@@ -3,8 +3,8 @@
  */
 
 export default class Lifecycle {
-  constructor(options, _this) {
-    this.__que = _this
+  constructor(options, nameSpace) {
+    this.nameSpace = nameSpace
     ;({
       beforeCreate: this.$beforeCreate,
       created: this.$created,
@@ -18,34 +18,34 @@ export default class Lifecycle {
   }
   
   beforeCreate() {
-    return this.$beforeCreate.call(this.__que)
+    return this.$beforeCreate.call(this.nameSpace)
   }
   
   created() {
-    return this.$created.call(this.__que)
+    return this.$created.call(this.nameSpace)
   }
   
   beforeMount() {
-    return this.$beforeMount.call(this.__que)
+    return this.$beforeMount.call(this.nameSpace)
   }
   
   mounted() {
-    return this.$mounted.call(this.__que)
+    return this.$mounted.call(this.nameSpace)
   }
   
   beforeUpdate() {
-    return this.$beforeUpdate.call(this.__que)
+    return this.$beforeUpdate.call(this.nameSpace)
   }
   
   updated() {
-    return this.$updated.call(this.__que)
+    return this.$updated.call(this.nameSpace)
   }
   
   beforeDestroy() {
-    return this.$beforeDestroy.call(this.__que)
+    return this.$beforeDestroy.call(this.nameSpace)
   }
   
   destroyed() {
-    return this.$destroyed.call(this.__que)
+    return this.$destroyed.call(this.nameSpace)
   }
 }
