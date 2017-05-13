@@ -3,7 +3,7 @@
  */
 export const config = {
   el: 'app',
-  data: {},
+  data: () => {},
   method: {},
   beforeCreate: () => {
   },

@@ -16,7 +16,7 @@ export default class Que {
     this.$$lifecycle = new Lifecycle(this.$options, this)
     this.$$lifecycle.beforeCreate()
     
-    this.$scope = observer(this.$options.data, this.$handle, this)
+    this.$scope = observer(this.$options.data(), this.$handle, this)
     
     this.$$events = []
     this.$watcher = {}
