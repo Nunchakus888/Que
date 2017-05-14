@@ -3,20 +3,20 @@
  */
 import { config } from '../constant/config'
 import initData from './init/data'
-import initHook from './hook'
+import initHook from './init/hook'
 
 import Bind from '../compiler/bind'
 import Observe from './observe'
 import Parse from '../compiler/parse'
-import Lifecycle from './lifecycle'
+import lifecycle from './init/lifecycle'
 class Que {
   constructor(options) {
     this.$options = Object.assign(config, options)
     this.$observe = new Observe()
     
     // 绑定数据 生成新的命名空间
-    this.$nameSpace = initData.install(this.$options.data, this.$observe)
-    this.$lifecycle = new Lifecycle(this.$options, this.$nameSpace)
+    this.$nameSpace = initData.install(this)
+    this.$lifecycle = lifecycle.install(this)
     this.$lifecycle.beforeCreate()
     
     // 设置命名空间 每次更新data后都应当手动设置一次
