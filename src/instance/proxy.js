@@ -1,7 +1,6 @@
 /**
  * Created by WittBulter on 2017/4/26.
  */
-import Utils from '../utils/index'
 
 export const proxy = (model = {}, handle) => {
   return new Proxy(model, {
@@ -10,6 +9,7 @@ export const proxy = (model = {}, handle) => {
       return Reflect.get(target, key, receiver)
     },
     set: function (target, key, value, receiver) {
+      
       if (window['Promise']) {
         Promise.resolve().then(() => handle(key))
       } else {
@@ -19,6 +19,9 @@ export const proxy = (model = {}, handle) => {
       }
       // 如果key已被代理 优先修改代理
       // 目标对象可操作 默认会在目标对象操作
+      if (key === 'value2') {
+        // console.log(target, receiver)
+      }
       if (target.hasOwnProperty(key)) {
         return Reflect.set(target, key, value)
       }

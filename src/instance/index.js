@@ -2,21 +2,19 @@
  * Created by WittBulter on 2017/4/24.
  */
 import { config } from '../constant/config'
-import initData from './init/data'
-import initHook from './hook'
-
+import * as Init from './init'
 import Bind from '../compiler/bind'
 import Observe from './observe'
 import Parse from '../compiler/parse'
-import Lifecycle from './lifecycle'
+
 class Que {
   constructor(options) {
     this.$options = Object.assign(config, options)
     this.$observe = new Observe()
     
     // 绑定数据 生成新的命名空间
-    this.$nameSpace = initData.install(this.$options.data, this.$observe)
-    this.$lifecycle = new Lifecycle(this.$options, this.$nameSpace)
+    this.$nameSpace = Init.data.install(this)
+    this.$lifecycle = Init.lifecycle.install(this)
     this.$lifecycle.beforeCreate()
     
     // 设置命名空间 每次更新data后都应当手动设置一次
@@ -35,8 +33,8 @@ class Que {
       this.$nameSpace.$el = el
       this.$lifecycle.mounted()
     })
-    
-    initHook.install(this)
+  
+    Init.hook.install(this)
   }
 }
 

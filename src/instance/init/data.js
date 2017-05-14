@@ -6,31 +6,50 @@ import Logger from '../../utils/logger'
 import Utils from '../../utils/index'
 import { proxy } from '../proxy'
 
+const check = (data) => {
+  if (!Utils.isFunction(data)) {
+    return Logger.err('data must be a Function')
+  }
+  
+  const initData = data()
+  if (!Utils.isObject(initData)) {
+    return Logger.err('data require return object')
+  }
+  
+  return initData
+}
+
+const depth = (record, observe) => {
+  const keys = Object.keys(record)
+  let length = keys.length
+  let current
+  while (length--) {
+    current = keys[length]
+    if (Utils.isObject(record[current])) {
+      record[current] = depth(record[current], observe)
+    }
+  }
+  const proxyInstance = proxy(record, updateKey => {
+    observe.update(updateKey)
+  })
+  return Object.create(proxyInstance)
+}
+
+const install = (instance) => {
+  const data = instance.$options.data
+  const observe = instance.$observe
+  const initData = check(data)
+  
+  const processed = depth(initData, observe)
+  for (let key in initData) {
+    observe.addKey(key)
+  }
+  const proxyInstance = proxy(processed, (key) => {
+    observe.update(key)
+  })
+  return Object.create(proxyInstance)
+}
+
 export default {
-  install: (data, observe) => {
-    if (!Utils.isFunction(data)) {
-      return Logger.err('data must be a Function')
-    }
-    
-    const initData = data()
-    if (!Utils.isObject(initData)) {
-      return Logger.err('data require return object')
-    }
-    
-    // const keys = Object.keys(initData)
-    // let length = keys.length
-    // let thisKey = keys[length]
-    
-    // while (length--) {
-    //   thisKey = keys[length]
-    // }
-    
-    for (let key in initData) {
-      observe.addKey(key)
-    }
-    const proxyInstance = proxy(initData, (key) => {
-      observe.update(key)
-    })
-    return Object.create(proxyInstance)
-  },
+  install,
 }

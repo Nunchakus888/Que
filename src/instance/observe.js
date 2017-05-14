@@ -20,18 +20,33 @@ export default class Observe {
     }
     this[key] = {
       update: [],
+      self: true,
+      
     }
   }
   
-  addUpdate(key, updateHandle) {
+  addUpdate(watchObject, updateHandle) {
+    const { self, parent, key } = watchObject
     if (Utils.isInObject(key, this)) {
-      this[key].update.push(updateHandle)
+      const existent = this[key].update.find(v => v === updateHandle)
+      if (!existent) {
+        this[key].self = self
+        this[key].parent = parent
+        this[key].update.push(updateHandle)
+      }
     }
   }
   
   update(key) {
+    // console.log(key)
     if (!Utils.isInObject(key, this)) {
       return
+    }
+    console.log(1)
+    if (!this[key].self) {
+      const next = this[key].parent
+      console.log(1)
+      return this.update(next)
     }
     const updateHandles = this[key].update
     let length = updateHandles.length
