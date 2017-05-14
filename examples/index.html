@@ -17,7 +17,7 @@
             观察变化
           </div>
           <div class="card-block">
-            <h1 class="card-title">{{'hi,' + message}}</h1>
+            <h1 class="card-title">{{'hi,' + test.test2.value2}}</h1>
             <input type="text" q-model="message" class="form-control m-md align-content-md-center" placeholder="输入字符">
             <button on-click="alertHello" class="btn btn-primary">触发alertHello</button>
           </div>
@@ -56,8 +56,15 @@
       message: 'que!',
       count: 1,
       toggle: true,
+      test: {
+        value: 2,
+        test2: {
+          value2: 3,
+        },
+      },
     }),
     created (){
+      this.test.test2.value2 = 100
       setInterval(() => {
         this.toggle && this.count ++
       }, 700)

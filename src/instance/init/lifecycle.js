@@ -17,13 +17,12 @@ const install = (instance) => {
     beforeDestroy: lifecycle.beforeDestroy,
     destroyed: lifecycle.destroyed,
   } = options)
-  
   const keys = Object.keys(lifecycle)
   let length = keys.length
   let key
   while (length --) {
     key = keys[length]
-    lifecycle[key].bind(nameSpace)
+    lifecycle[key] = lifecycle[key].bind(nameSpace)
   }
   return lifecycle
 }

@@ -25,7 +25,10 @@ export default class Observe {
   
   addUpdate(key, updateHandle) {
     if (Utils.isInObject(key, this)) {
-      this[key].update.push(updateHandle)
+      const existent = this[key].update.find(v => v === updateHandle)
+      if (!existent) {
+        this[key].update.push(updateHandle)
+      }
     }
   }
   
