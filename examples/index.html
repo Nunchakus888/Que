@@ -18,7 +18,7 @@
           </div>
           <div class="card-block">
             <h1 class="card-title">{{'hi,' + test.test2.value2}}</h1>
-            <input type="text" q-model="message" class="form-control m-md align-content-md-center" placeholder="输入字符">
+            <input type="text" q-model="test.test2.value2" class="form-control m-md align-content-md-center" placeholder="输入字符">
             <button on-click="alertHello" class="btn btn-primary">触发alertHello</button>
           </div>
           <div class="card-footer text-muted">
@@ -65,9 +65,10 @@
     }),
     created (){
       this.test.test2.value2 = 100
-      setInterval(() => {
-        this.toggle && this.count ++
-      }, 700)
+//      setInterval(() => {
+//        this.test.test2.value2 ++
+//        this.toggle && this.count ++
+//      }, 700)
     },
     method: {
       alertHello: function (){

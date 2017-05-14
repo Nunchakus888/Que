@@ -78,19 +78,40 @@ export const exp = (expString) => {
     }
   }
   
+  let watchGroup = []
   for (let i = 0; i < watchKey.length; i++) {
     resultString = resultString.replace(PLACEHOLDER, `\`\$\{${'scope.' + watchKey[i]}\}\``)
     if (watchKey[i].includes('.')) {
-      watchKey[i] = watchKey[i].split('.')[0]
+      const keys = watchKey[i].split('.')
+      for(let k = 0; k < keys.length; k ++) {
+        if (k === 0) {
+          watchGroup.push({
+            self: true,
+            key: keys[0],
+            parent: null,
+          })
+        } else {
+          watchGroup.push({
+            self: false,
+            key: keys[k],
+            parent: keys[k - 1],
+          })
+        }
+      }
+    } else {
+      watchGroup.push({
+        self: true,
+        key: watchKey[i],
+        parent: null,
+      })
     }
   }
   
   if (notes.includesConditional > 0) {
     resultString = includesConditional(resultString)
   }
-  
   return {
-    value: watchKey,
+    value: watchGroup,
     update: eval.call(null, '(scope) => (' + resultString + ')'),
   }
 }

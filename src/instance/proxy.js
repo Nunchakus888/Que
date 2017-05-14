@@ -19,6 +19,9 @@ export const proxy = (model = {}, handle) => {
       }
       // 如果key已被代理 优先修改代理
       // 目标对象可操作 默认会在目标对象操作
+      if (key === 'value2') {
+        // console.log(target, receiver)
+      }
       if (target.hasOwnProperty(key)) {
         return Reflect.set(target, key, value)
       }
