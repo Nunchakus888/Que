@@ -19,19 +19,22 @@ const check = (data) => {
   return initData
 }
 
-const depth = (record, observe) => {
+const depth = (record, observe, parent) => {
   const keys = Object.keys(record)
   let length = keys.length
   let current
   while (length--) {
     current = keys[length]
     if (Utils.isObject(record[current])) {
-      record[current] = depth(record[current], observe)
+      record[current].__parent__ = parent ? `${parent}.${current}` : current
+      record[current] = depth(record[current], observe, record[current].__parent__)
     }
   }
-  const proxyInstance = proxy(record, updateKey => {
-    observe.update(updateKey)
+  const proxyInstance = proxy(record, (key, parent) => {
+    observe.update(key, parent)
   })
+  
+
   return Object.create(proxyInstance)
 }
 
@@ -40,13 +43,16 @@ const install = (instance) => {
   const observe = instance.$observe
   const initData = check(data)
   
-  const processed = depth(initData, observe)
+  const processed = depth(initData, observe, null)
   for (let key in initData) {
     observe.addKey(key)
   }
-  const proxyInstance = proxy(processed, (key) => {
-    observe.update(key)
+  const proxyInstance = proxy(processed, (key, parent) => {
+    observe.update(key, parent)
   })
+  // const proxyInstance = proxy(initData, updateKey => {
+  //   observe.update(updateKey)
+  // })
   return Object.create(proxyInstance)
 }
 

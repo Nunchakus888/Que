@@ -18,8 +18,8 @@
           </div>
           <div class="card-block">
             <h1 class="card-title">{{'hi,' + test.test2.value2}}</h1>
-            <input type="text" q-model="test.test2.value2" class="form-control m-md align-content-md-center" placeholder="输入字符">
-            <button on-click="alertHello" class="btn btn-primary">触发alertHello</button>
+            <!--<input type="text" q-model="test.test2.value2" class="form-control m-md align-content-md-center" placeholder="输入字符">-->
+            <!--<button on-click="alertHello" class="btn btn-primary">触发alertHello</button>-->
           </div>
           <div class="card-footer text-muted">
             test
@@ -34,8 +34,8 @@
             自动增加的值
           </div>
           <div class="card-block">
-            <h1 class="card-title">{{count}}</h1>
-            <button on-click="handle" class="btn btn-primary">{{toggle ? '暂停' : '恢复'}}</button>
+            <!--<h1 class="card-title">{{count}}</h1>-->
+            <!--<button on-click="handle" class="btn btn-primary">{{toggle ? '暂停' : '恢复'}}</button>-->
           </div>
           <div class="card-footer text-muted">
             test
@@ -53,9 +53,10 @@
   const app = new Que({
     el: '#app',
     data: () => ({
-      message: 'que!',
-      count: 1,
-      toggle: true,
+//      message: 'que!',
+//      count: 1,
+//      toggle: true,
+      tt: 1,
       test: {
         value: 2,
         test2: {
@@ -64,10 +65,9 @@
       },
     }),
     created (){
-      this.test.test2.value2 = 100
+      this.test.test2.value2 = 5
 //      setInterval(() => {
 //        this.test.test2.value2 ++
-//        this.toggle && this.count ++
 //      }, 700)
     },
     method: {

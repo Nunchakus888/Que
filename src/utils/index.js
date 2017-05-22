@@ -46,4 +46,11 @@ export default {
     return str.split('-')[1]
   },
   textReg: /\{\{(.*)\}\}/,
+  
+  tick: (next) => {
+    if (window['Promise']) {
+      return Promise.resolve().then(next)
+    }
+    setTimeout(next, 0)
+  }
 }

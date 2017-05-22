@@ -37,12 +37,18 @@ export default class Observe {
     }
   }
   
-  update(key) {
+  update(key, parent) {
+    if (parent) {
+      // 取到了父级对象
+      // 未绑定父级对象
+      // todo
+    }
     // console.log(key)
+    return ;
     if (!Utils.isInObject(key, this)) {
+      
       return
     }
-    console.log(1)
     if (!this[key].self) {
       const next = this[key].parent
       console.log(1)
